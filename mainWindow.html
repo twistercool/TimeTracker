@@ -5,8 +5,40 @@
   </head>
   <body>
     <h1>This is the time tracking application</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <ul></ul>
+
+    <script>
+      const {ipcRenderer} = require('electron');
+      const ul = document.querySelector('ul');
+
+      ipcRenderer.on('task:add', function(e, task){
+        const li = document.createElement('li');
+
+        //shows the tasks till description
+        for(let i = 0; i < 3; ++i) { 
+          li.appendChild(document.createTextNode(task[i]));
+          li.appendChild(document.createElement('br'));
+        }
+
+        //shows whether the time is billable or not
+        if (task[3] === '1') {
+          li.appendChild(document.createTextNode('It is indeed billable'));
+        }
+        else {
+          li.appendChild(document.createTextNode('It appears this time is wasted and unfruitful...'));
+        }
+        li.append(document.createElement('br'));
+        
+        const startTime = document.createTextNode(task[4]);
+        const endTime = document.createTextNode(task[5]);
+        li.appendChild(startTime);
+        li.appendChild(document.createElement('br'));
+        li.appendChild(endTime);
+
+
+        ul.appendChild(li);
+        ul.appendChild(document.createElement('hr')); //adds a horizontal line
+      });
+    </script>
   </body>
 </html>
