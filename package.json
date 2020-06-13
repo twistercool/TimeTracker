@@ -1,0 +1,23 @@
+{
+  "name": "timetracker",
+  "version": "1.0.0",
+  "description": "txt",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twistercool/TimeTracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/twistercool/TimeTracker/issues"
+  },
+  "homepage": "https://github.com/twistercool/TimeTracker#readme",
+  "devDependencies": {
+    "electron": "^9.0.4"
+  }
+}
