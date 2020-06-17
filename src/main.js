@@ -3,8 +3,6 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
 let mainWindow;
 
-let tasks = [];
-
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -27,23 +25,12 @@ function createWindow () {
 
   // and load the .html of the app.
   mainWindow.loadFile('src\\mainWindow.html')
-
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(createWindow)
-
-/*
-//catch the return item from the add window
-ipcMain.on('task:add', function(e, task){
-  tasks.push(task);
-  console.log(tasks);
-  mainWindow.webContents.send('task:add', task);
-  addWindow.close();
-});
-*/
 
 function showInputPanel(){
   mainWindow.webContents.send('showPanel', panel);
@@ -53,6 +40,13 @@ function showTasks(){
 
 }
 
+function deleteTasks(){
+
+}
+
+function deleteTask(){
+
+}
 
 
 
@@ -67,10 +61,11 @@ const mainMenuTemplate = [
     label: 'File',
     submenu: [
       {
-        label: 'Add Tracked Item'
-      },
-      {
-        label: 'Clear All'
+        label: 'Clear All',
+        click() {
+          deleteTasks();
+          mainWindow.webContents.send('itemsClear');
+        }
       },
       {
         label: 'Quit',
