@@ -19,5 +19,6 @@
   "homepage": "https://github.com/twistercool/TimeTracker#readme",
   "devDependencies": {
     "electron": "^9.0.4"
-  }
+  },
+  "dependencies": {}
 }

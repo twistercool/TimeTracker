@@ -5,40 +5,35 @@
   </head>
   <body>
     <h1>This is the time tracking application</h1>
-    <ul></ul>
+    <ul id="myList"></ul>
+    <form id="myForm" action="/api/process/form" method="POST">
+        <div>
+            <label>Enter Task</label>
+            <input type="text" id="task" autoFocus>
+        </div>
+        <div>
+            <label>Tag</label>
+            <input type="text" id="tag">
+        </div>
+        <div>
+            <label>Description</label>
+            <input type="text" id="description">
+        </div>
+        <div>
+            <label>Billable (0 if false and 1 if true)</label>
+            <input type="text" id="text">
+        </div>
+        <div>
+            <label>StartTime</label>
+            <input type="datetime-local" id="startTime">
+        </div>
+        <div>
+            <label>EndTime</label>
+            <input type="datetime-local" id="endTime">
+        </div>
+        <button type="submit">Add Time Block</button>
+    </form>
 
-    <script>
-      const {ipcRenderer} = require('electron');
-      const ul = document.querySelector('ul');
-
-      ipcRenderer.on('task:add', function(e, task){
-        const li = document.createElement('li');
-
-        //shows the tasks till description
-        for(let i = 0; i < 3; ++i) { 
-          li.appendChild(document.createTextNode(task[i]));
-          li.appendChild(document.createElement('br'));
-        }
-
-        //shows whether the time is billable or not
-        if (task[3] === '1') {
-          li.appendChild(document.createTextNode('It is indeed billable'));
-        }
-        else {
-          li.appendChild(document.createTextNode('It appears this time is wasted and unfruitful...'));
-        }
-        li.append(document.createElement('br'));
-        
-        const startTime = document.createTextNode(task[4]);
-        const endTime = document.createTextNode(task[5]);
-        li.appendChild(startTime);
-        li.appendChild(document.createElement('br'));
-        li.appendChild(endTime);
-
-
-        ul.appendChild(li);
-        ul.appendChild(document.createElement('hr')); //adds a horizontal line
-      });
-    </script>
+    <script defer src="mainRender.js"></script>
   </body>
 </html>
