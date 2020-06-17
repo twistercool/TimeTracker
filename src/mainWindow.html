@@ -6,7 +6,7 @@
   <body>
     <h1>This is the time tracking application</h1>
     <ul id="myList"></ul>
-    <form id="myForm" action="/api/process/form" method="POST">
+    <form id="myForm">
         <div>
             <label>Enter Task</label>
             <input type="text" id="task" autoFocus>
@@ -14,26 +14,29 @@
         <div>
             <label>Tag</label>
             <input type="text" id="tag">
-        </div>
-        <div>
             <label>Description</label>
             <input type="text" id="description">
         </div>
         <div>
-            <label>Billable (0 if false and 1 if true)</label>
-            <input type="text" id="text">
+            <label>Billable</label>
+            <input type="checkbox" id="billable">
         </div>
         <div>
             <label>StartTime</label>
             <input type="datetime-local" id="startTime">
-        </div>
-        <div>
             <label>EndTime</label>
             <input type="datetime-local" id="endTime">
         </div>
         <button type="submit">Add Time Block</button>
     </form>
 
+    <form id="delete">
+        <div>
+            <label>DeleteNumber</label>
+            <input type="text" id="deleteNum">
+        </div>
+        <button type="button" onclick="removeFromForm()">DeleteNumbers</button>
+    </form>
     <script defer src="mainRender.js"></script>
   </body>
 </html>
