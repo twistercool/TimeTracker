@@ -2,7 +2,8 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
 
 let mainWindow;
-let addWindow;
+
+let tasks = [];
 
 function createWindow () {
   // Create the browser window.
@@ -25,7 +26,7 @@ function createWindow () {
   Menu.setApplicationMenu(mainMenu);
 
   // and load the .html of the app.
-  mainWindow.loadFile('mainWindow.html')
+  mainWindow.loadFile('src\\mainWindow.html')
 
 }
 
@@ -34,30 +35,24 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(createWindow)
 
-function newTrackedItemWindow() {
-  //creates new window for adding tracked items
-  addWindow = new BrowserWindow({
-    width: 300,
-    height: 300,
-    title: 'Add Tracked Time Block',
-    webPreferences: {
-      nodeIntegration: true
-    }
-  });
-  // loads the html file for the adding window
-  addWindow.loadFile('addWindow.html');
-
-  // garbage collection
-  addWindow.on('close', function(){
-    addWindow = null;
-  });
-}
-
+/*
 //catch the return item from the add window
 ipcMain.on('task:add', function(e, task){
+  tasks.push(task);
+  console.log(tasks);
   mainWindow.webContents.send('task:add', task);
   addWindow.close();
 });
+*/
+
+function showInputPanel(){
+  mainWindow.webContents.send('showPanel', panel);
+}
+
+function showTasks(){
+
+}
+
 
 
 
@@ -72,10 +67,7 @@ const mainMenuTemplate = [
     label: 'File',
     submenu: [
       {
-        label: 'Add Tracked Item',
-        click(){
-          newTrackedItemWindow();
-        }
+        label: 'Add Tracked Item'
       },
       {
         label: 'Clear All'
