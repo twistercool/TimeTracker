@@ -17,8 +17,7 @@ for (let i=0; i < tags.length; ++i){
 }
 
 class Task{
-    constructor(task, tag, description, isBillable, startTime, endTime){
-        this.task = task;
+    constructor(tag, description, isBillable, startTime, endTime){
         this.tag = tag;
         this.description = description;
         this.isBillable = isBillable;
@@ -48,26 +47,18 @@ form.addEventListener('load', setFormDefaults());
 // this function adds the form contents to the task array that stores the data
 function addTask(){
     ul.appendChild(document.createElement('hr'));
-    const taskText = document.querySelector('#task').value;
     const tagText = document.querySelector('#tag').value;
     const descriptionText = document.querySelector('#description').value;
     const billable = document.querySelector('#billable').checked;
     const startTime = document.querySelector('#startTime').value;
     const endTime = document.querySelector('#endTime').value;
 
-    const taskFromForm = new Task(taskText, tagText, descriptionText,
+    const taskFromForm = new Task(tagText, descriptionText,
         billable, startTime, endTime);
     
     tasks.push(taskFromForm);
     document.getElementById("myForm").reset();
 }
-
-// function removeFromForm(){
-//     const delForm = document.forms['delete'];
-//     const num = delForm.querySelector('#deleteNum').value;
-//     document.getElementById("delete").reset();
-//     removeAtIndex(num);
-// }
 
 function removeAtIndex(index){
     tasks.splice(index, 1);
@@ -82,10 +73,6 @@ function updateDisplay(e) {
         let currentTask = tasks[i];
         const li = document.createElement('li');
 
-        if(currentTask.task != '') {
-            li.appendChild(document.createTextNode(currentTask.task));
-            li.appendChild(document.createElement('br'));
-        }
         if(currentTask.tag != '') {
             li.appendChild(document.createTextNode(currentTask.tag));
             li.appendChild(document.createElement('br'));
@@ -109,8 +96,11 @@ function updateDisplay(e) {
         li.appendChild(document.createTextNode(currentTask.endTime));
 
         // initialises the delete button for each task
+        if (currentTask.endTime !== '') {
+            li.appendChild(document.createElement('br'));
+        }
         let deleteButton = document.createElement('BUTTON');
-        deleteButton.append(document.createTextNode('delete task: ' + i));
+        deleteButton.append(document.createTextNode('delete task'));
         deleteButton.setAttribute('onClick', `removeAtIndex(${i})`);
         li.appendChild(deleteButton);
 
