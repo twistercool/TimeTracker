@@ -53,7 +53,7 @@ const mainMenuTemplate = [
     ]
   },
   {
-    label:'Developer options',
+    label: 'Developer options',
     submenu: [
       {
         label: 'Toggle dev mode',
@@ -83,7 +83,7 @@ app.on('activate', () => {
   }
 })
 
-// If mac then add an empty object to the menutemplate so that it renders properly
+// If mac then add an empty object to the menu template so that it renders properly
 if (process.platform == 'darwin') {
   mainMenuTemplate.unshift({ });
 }

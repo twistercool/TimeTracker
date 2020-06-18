@@ -4,21 +4,40 @@ const ul = document.getElementById('myList');
 
 let tasks = []; //stores the tasks of the window
 let tags = ['work', 'leisure', 'swag', 'dab']; 
+let projects = ['work on my bicep curls',
+    'dab with ease', 'blender project', 'swag project'];
 
 // adds the tags to the drop down box
-let dropDownBox = document.getElementById('tag');
-for (let i=0; i < tags.length; ++i){
-    // dropDownBox.
-    let currentTag = tags[i];
-    let element = document.createElement("option");
-    element.text = currentTag;
-    element.value = currentTag;
-    dropDownBox.add(element);
+function loadTags(){
+    let dropDownBox = document.getElementById('tag');
+    dropDownBox.innerHTML = ''; //clears it before adding all the tags
+    for (let i=0; i < tags.length; ++i){
+        let currentTag = tags[i];
+        let element = document.createElement("option");
+        element.text = currentTag;
+        element.value = currentTag;
+        dropDownBox.add(element);
+    }
 }
+loadTags();
+// adds the projects to the respective drop down box
+function loadProjects(){
+    let dropDownBoxProject = document.getElementById('project');
+    dropDownBoxProject.innerHTML = ''; //clears it before adding all the projects
+    for (let i=0; i < projects.length; ++i){
+        let currentTag = projects[i];
+        let element = document.createElement("option");
+        element.text = currentTag;
+        element.value = currentTag;
+        dropDownBoxProject.add(element);
+    }
+}
+loadProjects();
 
 class Task{
-    constructor(tag, description, isBillable, startTime, endTime){
+    constructor(tag, project, description, isBillable, startTime, endTime){
         this.tag = tag;
+        this.project = project;
         this.description = description;
         this.isBillable = isBillable;
         this.startTime = startTime;
@@ -26,9 +45,36 @@ class Task{
     }
 }
 
+function addTag(newTag){
+    tags.push(newTag);
+    loadTags();
+}
+function addProject(newProject){
+    projects.push(newProject);
+    loadProjects();
+}
+
+const tagForm = document.forms['addTag'];
+tagForm.addEventListener('submit', function(){
+    event.preventDefault();
+    const currentTag = document.querySelector('#addedTag').value;
+    console.log(currentTag);
+    addTag(currentTag);
+    document.getElementById('addTag').reset();
+});
+
+const projectForm = document.forms['addProject'];
+projectForm.addEventListener('submit', function(){
+    event.preventDefault();
+    const currentProject = document.querySelector('#addedProject').value;
+    addProject(currentProject);
+    document.getElementById('addProject').reset();
+});
+
 //when the form is submitted, its contents are added to the array and displayed
-const form = document.forms['myForm'];
-form.addEventListener('submit', function(){
+const timeBlockForm = document.forms['myForm'];
+timeBlockForm.addEventListener('load', setFormDefaults());
+timeBlockForm.addEventListener('submit', function(){
     event.preventDefault(); //necessary, it prevents the window from removing the contents
     addTask();
     updateDisplay();
@@ -41,19 +87,19 @@ function setFormDefaults(){
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     document.getElementById('startTime').value = now.toISOString().slice(0, 16);
 }
-form.addEventListener('load', setFormDefaults());
 
 
 // this function adds the form contents to the task array that stores the data
 function addTask(){
     ul.appendChild(document.createElement('hr'));
-    const tagText = document.querySelector('#tag').value;
+    const tag = document.querySelector('#tag').value;
+    const project = document.querySelector('#project').value;
     const descriptionText = document.querySelector('#description').value;
     const billable = document.querySelector('#billable').checked;
     const startTime = document.querySelector('#startTime').value;
     const endTime = document.querySelector('#endTime').value;
 
-    const taskFromForm = new Task(tagText, descriptionText,
+    const taskFromForm = new Task(tag, project, descriptionText,
         billable, startTime, endTime);
     
     tasks.push(taskFromForm);
@@ -70,11 +116,16 @@ function updateDisplay(e) {
     ul.innerHTML = '';
     for (let i = 0; i < tasks.length; ++i)
     {
+        ul.appendChild(document.createElement('hr'));
         let currentTask = tasks[i];
         const li = document.createElement('li');
 
         if(currentTask.tag != '') {
             li.appendChild(document.createTextNode(currentTask.tag));
+            li.appendChild(document.createElement('br'));
+        }
+        if(currentTask.project != '') {
+            li.appendChild(document.createTextNode(currentTask.project));
             li.appendChild(document.createElement('br'));
         }
         if(currentTask.description != '') {
@@ -84,12 +135,9 @@ function updateDisplay(e) {
 
         //shows whether the time is billable or not
         if (currentTask.isBillable) {
-            li.appendChild(document.createTextNode('It is billable'));
+            li.appendChild(document.createTextNode('This time is billable'));
+            li.append(document.createElement('br'));
         }
-        else {
-            li.appendChild(document.createTextNode('It is not billable...'));
-        }
-        li.append(document.createElement('br'));
 
         li.appendChild(document.createTextNode(currentTask.startTime));
         li.appendChild(document.createElement('br'));
