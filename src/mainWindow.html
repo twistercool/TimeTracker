@@ -5,13 +5,32 @@
   </head>
   <body>
     <h1>This is the time tracking application</h1>
+    <form id="addTag">
+        <div>
+            <label>Add Tag</label>
+        </div>
+        <input type="text" id="addedTag">
+        <button type="submit">Add Tag</button>
+    </form>
+    <form id="addProject">
+        <div>
+            <label>Add Project</label>
+        </div>
+        <input type="text" id="addedProject">
+        <button type="submit">Add Project</button>
+    </form>
+    <hr>
+
     <ul id="myList"></ul>
+
     <form id="myForm">
         <div>
             <label>Tag</label>
-            <select id="tag">
-            </select>
-
+            <select id="tag"></select>
+            <label>Project</label>
+            <select id="project"></select>
+        </div>
+        <div>
             <label>Description</label>
             <input type="text" id="description">
         </div>
