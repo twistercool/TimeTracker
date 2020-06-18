@@ -1,6 +1,5 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
-
 let mainWindow;
 
 function createWindow () {
@@ -32,27 +31,6 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(createWindow)
 
-function showInputPanel(){
-  mainWindow.webContents.send('showPanel', panel);
-}
-
-function showTasks(){
-
-}
-
-function deleteTasks(){
-
-}
-
-function deleteTask(){
-
-}
-
-
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-
 
 // this template serves as the main bar up top. It essentially is an array
 // of submenus with labels, with functions that are invoked on click
@@ -63,7 +41,6 @@ const mainMenuTemplate = [
       {
         label: 'Clear All',
         click() {
-          deleteTasks();
           mainWindow.webContents.send('itemsClear');
         }
       },
