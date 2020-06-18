@@ -3,15 +3,15 @@ const { ipcRenderer } = require("electron");
 const ul = document.getElementById('myList');
 
 let tasks = []; //stores the tasks of the window
-let tags = ['work', 'leisure', 'swag', 'dab']; 
-let projects = ['work on my bicep curls',
+let tags = ['', 'work', 'leisure', 'swag', 'dab']; 
+let projects = ['', 'work on my bicep curls',
     'dab with ease', 'blender project', 'swag project'];
 
 // adds the tags to the drop down box
 function loadTags(){
     let dropDownBox = document.getElementById('tag');
     dropDownBox.innerHTML = ''; //clears it before adding all the tags
-    for (let i=0; i < tags.length; ++i){
+    for (let i=1; i < tags.length; ++i){
         let currentTag = tags[i];
         let element = document.createElement("option");
         element.text = currentTag;
@@ -24,7 +24,7 @@ loadTags();
 function loadProjects(){
     let dropDownBoxProject = document.getElementById('project');
     dropDownBoxProject.innerHTML = ''; //clears it before adding all the projects
-    for (let i=0; i < projects.length; ++i){
+    for (let i=1; i < projects.length; ++i){
         let currentTag = projects[i];
         let element = document.createElement("option");
         element.text = currentTag;
@@ -116,7 +116,6 @@ function updateDisplay(e) {
     ul.innerHTML = '';
     for (let i = 0; i < tasks.length; ++i)
     {
-        ul.appendChild(document.createElement('hr'));
         let currentTask = tasks[i];
         const li = document.createElement('li');
 
@@ -139,14 +138,12 @@ function updateDisplay(e) {
             li.append(document.createElement('br'));
         }
 
-        li.appendChild(document.createTextNode(currentTask.startTime));
-        li.appendChild(document.createElement('br'));
-        li.appendChild(document.createTextNode(currentTask.endTime));
+        let displayDate = FormatDateForDisplay(currentTask.startTime);
+        displayDate += (currentTask.endTime !== '') ? ' - ' + FormatDateForDisplay(currentTask.endTime) : ''; 
+        li.appendChild(document.createTextNode(displayDate));
 
         // initialises the delete button for each task
-        if (currentTask.endTime !== '') {
-            li.appendChild(document.createElement('br'));
-        }
+        li.appendChild(document.createElement('br'));
         let deleteButton = document.createElement('BUTTON');
         deleteButton.append(document.createTextNode('delete task'));
         deleteButton.setAttribute('onClick', `removeAtIndex(${i})`);
@@ -155,6 +152,10 @@ function updateDisplay(e) {
         ul.appendChild(li);
         ul.appendChild(document.createElement('hr')); //adds a horizontal line
     }
+}
+
+function FormatDateForDisplay (date) {
+    return date.substr(date.length - 5);
 }
 
 //removes all the tasks displayed when main.js sends the event
