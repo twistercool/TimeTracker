@@ -75,7 +75,6 @@ addTagForm.addEventListener('submit', function(){
     addTag(currentTag);
     document.getElementById('addTag').reset();
 });
-/////////
 const deleteTagForm = document.forms['deleteTag'];
 deleteTagForm.addEventListener('submit', function(){
     event.preventDefault();
@@ -139,6 +138,16 @@ function removeAtIndex(index){
     updateDisplay();
 }
 
+//adds the current date and time as an endTime to a task stored in tasks
+function addEndDate(index){
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    console.log(now.toISOString().slice(0, 16));
+    console.log(tasks);
+    tasks[index]['endTime'] = now.toISOString().slice(0, 16);
+    updateDisplay();
+}
+
 // this function shows all the tasks that are in the task array
 function updateDisplay(e) {
     ul.innerHTML = '';
@@ -169,6 +178,15 @@ function updateDisplay(e) {
         let displayDate = FormatDateForDisplay(currentTask.startTime);
         displayDate += (currentTask.endTime !== '') ? ' - ' + FormatDateForDisplay(currentTask.endTime) : ''; 
         li.appendChild(document.createTextNode(displayDate));
+
+        //puts a button to finish a task that gives the date now
+        if (currentTask.endTime === '') {
+            li.appendChild(document.createElement('br'));
+            let finishTaskButton = document.createElement('BUTTON');
+            finishTaskButton.append(document.createTextNode('finish task'));
+            finishTaskButton.setAttribute('onClick', `addEndDate(${i})`);
+            li.appendChild(finishTaskButton);
+        }
 
         // initialises the delete button for each task
         li.appendChild(document.createElement('br'));
