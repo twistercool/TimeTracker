@@ -62,11 +62,15 @@ function addTask(){
     document.getElementById("myForm").reset();
 }
 
-function removeFromForm(){
-    const delForm = document.forms['delete'];
-    const num = delForm.querySelector('#deleteNum').value;
-    document.getElementById("delete").reset();
-    tasks.splice(num, 1);
+// function removeFromForm(){
+//     const delForm = document.forms['delete'];
+//     const num = delForm.querySelector('#deleteNum').value;
+//     document.getElementById("delete").reset();
+//     removeAtIndex(num);
+// }
+
+function removeAtIndex(index){
+    tasks.splice(index, 1);
     updateDisplay();
 }
 
@@ -103,6 +107,12 @@ function updateDisplay(e) {
         li.appendChild(document.createTextNode(currentTask.startTime));
         li.appendChild(document.createElement('br'));
         li.appendChild(document.createTextNode(currentTask.endTime));
+
+        // initialises the delete button for each task
+        let deleteButton = document.createElement('BUTTON');
+        deleteButton.append(document.createTextNode('delete task: ' + i));
+        deleteButton.setAttribute('onClick', `removeAtIndex(${i})`);
+        li.appendChild(deleteButton);
 
         ul.appendChild(li);
         ul.appendChild(document.createElement('hr')); //adds a horizontal line
