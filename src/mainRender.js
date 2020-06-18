@@ -49,26 +49,54 @@ function addTag(newTag){
     tags.push(newTag);
     loadTags();
 }
+function deleteTag(tagName){
+    let index = tags.indexOf(tagName);
+    if (index > -1) {
+       tags.splice(index, 1);
+    }
+    loadTags();
+}
 function addProject(newProject){
     projects.push(newProject);
     loadProjects();
 }
+function deleteProject(projectName){
+    let index = projects.indexOf(projectName);
+    if (index > -1) {
+       projects.splice(index, 1);
+    }
+    loadProjects();
+}
 
-const tagForm = document.forms['addTag'];
-tagForm.addEventListener('submit', function(){
+const addTagForm = document.forms['addTag'];
+addTagForm.addEventListener('submit', function(){
     event.preventDefault();
     const currentTag = document.querySelector('#addedTag').value;
-    console.log(currentTag);
     addTag(currentTag);
     document.getElementById('addTag').reset();
 });
+/////////
+const deleteTagForm = document.forms['deleteTag'];
+deleteTagForm.addEventListener('submit', function(){
+    event.preventDefault();
+    const currentTag = document.querySelector('#deletedTag').value;
+    deleteTag(currentTag);
+    document.getElementById('deleteTag').reset();
+});
 
-const projectForm = document.forms['addProject'];
-projectForm.addEventListener('submit', function(){
+const addProjectForm = document.forms['addProject'];
+addProjectForm.addEventListener('submit', function(){
     event.preventDefault();
     const currentProject = document.querySelector('#addedProject').value;
     addProject(currentProject);
     document.getElementById('addProject').reset();
+});
+const deleteProjectForm = document.forms['deleteProject'];
+deleteProjectForm.addEventListener('submit', function(){
+    event.preventDefault();
+    const currentProject = document.querySelector('#deletedProject').value;
+    deleteProject(currentProject);
+    document.getElementById('deleteProject').reset();
 });
 
 //when the form is submitted, its contents are added to the array and displayed
