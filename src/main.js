@@ -12,9 +12,21 @@ function createWindow () {
     }
   })
 
+  // mainWindow.on('loaded', () => {
+  //   mainWindow.webContents.send('loadTasks');
+  // });
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.send('loadTasks');
+  });
+
+  // saves before quitting
+  mainWindow.on('close', () => {
+    mainWindow.webContents.send('saveTasks');
+  });
+
   // Quit app when main window closed
    mainWindow.on('closed', function(){
-     app.quit();
+      app.quit();
    });
 
   // Build menu from template
@@ -78,7 +90,6 @@ const mainMenuTemplate = [
     ]
   }
 ];
-
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

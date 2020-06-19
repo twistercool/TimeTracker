@@ -212,6 +212,8 @@ function FormatDateForDisplay (date) {
     return date.substr(date.length - 5);
 }
 
+//! BELOW ARE EVENT HANDLERS FOR EVENTS SENT FROM main.js
+
 //removes all the tasks displayed when main.js sends the event
 ipcRenderer.on('itemsClear', function(){
     ul.innerHTML = '';
@@ -223,18 +225,16 @@ ipcRenderer.on('saveTasks', () => {
 });
 
 ipcRenderer.on('loadTasks', () => {
-    tasks = getSaveData();
+    tasks = store.get('tasks');;
+    tags = store.get('tags');;
+    projects = store.get('projects');
+    loadTags();
+    loadProjects();
     updateDisplay();
 });
 
 function saveTasks(){
     store.set('tasks', tasks);
+    store.set('tags', tags);
+    store.set('projects', projects);
 }
-
-function getSaveData(){
-    return store.get('tasks');
-}
-// console.log(getSaveData());
-
-  
-  /////////////////////////////////////////// ////////////////////////          ////
