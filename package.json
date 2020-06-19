@@ -4,7 +4,6 @@
   "description": "txt",
   "main": "src\\main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
   "repository": {
@@ -20,5 +19,7 @@
   "devDependencies": {
     "electron": "^9.0.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "electron-store": "^5.2.0"
+  }
 }

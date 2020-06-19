@@ -49,6 +49,20 @@ const mainMenuTemplate = [
         click() {
           app.quit();
         }
+      },
+      {
+        label: 'Save',
+        click() {
+          //sends the event to the mainRender.js
+          mainWindow.webContents.send('saveTasks');
+        }
+      },
+      {
+        label: 'Load From Save File',
+        click() {
+          //sends the event to the mainRender.js
+          mainWindow.webContents.send('loadTasks');
+        }
       }
     ]
   },
@@ -57,7 +71,7 @@ const mainMenuTemplate = [
     submenu: [
       {
         label: 'Toggle dev mode',
-        click(item, focusedWindow){
+        click(item, focusedWindow) {
           focusedWindow.toggleDevTools();
         }
       }
