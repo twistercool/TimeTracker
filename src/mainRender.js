@@ -11,7 +11,7 @@ let projects = ['', 'work on my bicep curls',
 function loadTags(){
     let dropDownBox = document.getElementById('tag');
     dropDownBox.innerHTML = ''; //clears it before adding all the tags
-    for (let i=1; i < tags.length; ++i){
+    for (let i=0; i < tags.length; ++i){
         let currentTag = tags[i];
         let element = document.createElement("option");
         element.text = currentTag;
@@ -24,7 +24,7 @@ loadTags();
 function loadProjects(){
     let dropDownBoxProject = document.getElementById('project');
     dropDownBoxProject.innerHTML = ''; //clears it before adding all the projects
-    for (let i=1; i < projects.length; ++i){
+    for (let i=0; i < projects.length; ++i){
         let currentTag = projects[i];
         let element = document.createElement("option");
         element.text = currentTag;
@@ -46,23 +46,23 @@ class Task{
 }
 
 function addTag(newTag){
-    tags.push(newTag);
+    if (newTag !== '') tags.push(newTag);
     loadTags();
 }
 function deleteTag(tagName){
     let index = tags.indexOf(tagName);
-    if (index > -1) {
+    if (index > -1 && tagName !== '') {
        tags.splice(index, 1);
     }
     loadTags();
 }
 function addProject(newProject){
-    projects.push(newProject);
+    if (newProject !== '') projects.push(newProject);
     loadProjects();
 }
 function deleteProject(projectName){
     let index = projects.indexOf(projectName);
-    if (index > -1) {
+    if (index > -1 && projectName !== '') {
        projects.splice(index, 1);
     }
     loadProjects();
