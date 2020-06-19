@@ -1,5 +1,8 @@
 const { ipcRenderer } = require("electron");
 
+const Store = require('electron-store');
+const store = new Store();
+
 const ul = document.getElementById('myList');
 
 let tasks = []; //stores the tasks of the window
@@ -44,6 +47,8 @@ class Task{
         this.endTime = endTime;
     }
 }
+
+
 
 function addTag(newTag){
     if (newTag !== '') tags.push(newTag);
@@ -109,10 +114,13 @@ timeBlockForm.addEventListener('submit', function(){
 });
 
 //defaults the start time to right now
-function setFormDefaults(){
+function getCurrentDate(){
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    document.getElementById('startTime').value = now.toISOString().slice(0, 16);
+    return now.toISOString().slice(0, 16);
+}
+function setFormDefaults(){
+    document.getElementById('startTime').value = getCurrentDate();
 }
 
 
@@ -209,3 +217,24 @@ ipcRenderer.on('itemsClear', function(){
     ul.innerHTML = '';
     tasks = [];
 });
+
+ipcRenderer.on('saveTasks', () => {
+    saveTasks();
+});
+
+ipcRenderer.on('loadTasks', () => {
+    tasks = getSaveData();
+    updateDisplay();
+});
+
+function saveTasks(){
+    store.set('tasks', tasks);
+}
+
+function getSaveData(){
+    return store.get('tasks');
+}
+// console.log(getSaveData());
+
+  
+  /////////////////////////////////////////// ////////////////////////          ////
