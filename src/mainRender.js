@@ -3,7 +3,9 @@ const { ipcRenderer, BrowserWindow, remote } = require("electron");
 const Store = require('electron-store');
 const store = new Store();
 
-const tasksList = document.getElementById('myTasks');
+const tasksUL = document.getElementById('myTasks');
+const tagsUL = document.getElementById('myTags');
+const projectsUL = document.getElementById('myProjects');
 
 let tasks = []; //stores the tasks of the window
 let tags = ['', 'work', 'leisure', 'swag', 'dab']; 
@@ -11,7 +13,7 @@ let projects = ['', 'work on my bicep curls',
     'dab with ease', 'blender project', 'swag project'];
 
 // adds the tags to the drop down box
-function loadTags(){
+function loadDropBoxTags(){
     let dropDownBox = document.getElementById('tag');
     dropDownBox.innerHTML = ''; //clears it before adding all the tags
     for (let i=0; i < tags.length; ++i){
@@ -22,9 +24,9 @@ function loadTags(){
         dropDownBox.add(element);
     }
 }
-loadTags();
+loadDropBoxTags();
 // adds the projects to the respective drop down box
-function loadProjects(){
+function loadDropBoxProjects(){
     let dropDownBoxProject = document.getElementById('project');
     dropDownBoxProject.innerHTML = ''; //clears it before adding all the projects
     for (let i=0; i < projects.length; ++i){
@@ -35,7 +37,7 @@ function loadProjects(){
         dropDownBoxProject.add(element);
     }
 }
-loadProjects();
+loadDropBoxProjects();
 
 class Task{
     constructor(tag, project, description, isBillable, startTime, endTime){
@@ -50,25 +52,29 @@ class Task{
 
 function addTag(newTag){
     if (newTag !== '') tags.push(newTag);
-    loadTags();
+    loadDropBoxTags();
+    displayTags();
 }
 function deleteTag(tagName){
     let index = tags.indexOf(tagName);
     if (index > -1 && tagName !== '') {
        tags.splice(index, 1);
     }
-    loadTags();
+    loadDropBoxTags();
+    displayTags();
 }
 function addProject(newProject){
     if (newProject !== '') projects.push(newProject);
-    loadProjects();
+    loadDropBoxProjects();
+    displayProjects();
 }
 function deleteProject(projectName){
     let index = projects.indexOf(projectName);
     if (index > -1 && projectName !== '') {
        projects.splice(index, 1);
     }
-    loadProjects();
+    loadDropBoxProjects();
+    displayProjects();
 }
 
 const addTagForm = document.forms['addTag'];
@@ -78,13 +84,6 @@ addTagForm.addEventListener('submit', function(){
     addTag(currentTag);
     document.getElementById('addTag').reset();
 });
-const deleteTagForm = document.forms['deleteTag'];
-deleteTagForm.addEventListener('submit', function(){
-    event.preventDefault();
-    const currentTag = document.querySelector('#deletedTag').value;
-    deleteTag(currentTag);
-    document.getElementById('deleteTag').reset();
-});
 
 const addProjectForm = document.forms['addProject'];
 addProjectForm.addEventListener('submit', function(){
@@ -92,13 +91,6 @@ addProjectForm.addEventListener('submit', function(){
     const currentProject = document.querySelector('#addedProject').value;
     addProject(currentProject);
     document.getElementById('addProject').reset();
-});
-const deleteProjectForm = document.forms['deleteProject'];
-deleteProjectForm.addEventListener('submit', function(){
-    event.preventDefault();
-    const currentProject = document.querySelector('#deletedProject').value;
-    deleteProject(currentProject);
-    document.getElementById('deleteProject').reset();
 });
 
 //when the form is submitted, its contents are added to the array and displayed
@@ -127,7 +119,7 @@ function FormatDateForDisplay (date) {
 
 // this function adds the form contents to the task array that stores the data
 function addTask(){
-    tasksList.appendChild(document.createElement('hr'));
+    tasksUL.appendChild(document.createElement('hr'));
     const tag = document.querySelector('#tag').value;
     const project = document.querySelector('#project').value;
     const descriptionText = document.querySelector('#description').value;
@@ -142,24 +134,34 @@ function addTask(){
     document.getElementById("myForm").reset();
 }
 
-function removeAtIndex(index){
+function removeTaskAtIndex(index){
     tasks.splice(index, 1);
     displayTasks();
+}
+
+function removeTagAtIndex(index){
+    tags.splice(index, 1);
+    loadDropBoxTags();
+    displayTags();
+}
+
+function removeProjectAtIndex(index){
+    projects.splice(index, 1);
+    loadDropBoxProjects();
+    displayProjects();
 }
 
 //adds the current date and time as an endTime to a task stored in tasks
 function addEndDate(index){
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    console.log(now.toISOString().slice(0, 16));
-    console.log(tasks);
     tasks[index]['endTime'] = now.toISOString().slice(0, 16);
     displayTasks();
 }
 
 // this function shows all the tasks that are in the task array
-function displayTasks(e) {
-    tasksList.innerHTML = '';
+function displayTasks(e){
+    tasksUL.innerHTML = '';
     for (let i = 0; i < tasks.length; ++i)
     {
         let currentTask = tasks[i];
@@ -201,12 +203,48 @@ function displayTasks(e) {
         li.appendChild(document.createElement('br'));
         let deleteButton = document.createElement('BUTTON');
         deleteButton.append(document.createTextNode('delete task'));
-        deleteButton.setAttribute('onClick', `removeAtIndex(${i})`);
+        deleteButton.setAttribute('onClick', `removeTaskAtIndex(${i})`);
         li.appendChild(deleteButton);
 
-        tasksList.appendChild(li);
-        tasksList.appendChild(document.createElement('hr')); //adds a horizontal line
+        tasksUL.appendChild(li);
+        tasksUL.appendChild(document.createElement('hr')); //adds a horizontal line
     }
+}
+
+function displayTags(){
+    tagsUL.innerHTML = '';
+    for (let i=1; i<tags.length; ++i){
+        let currentTag = tags[i];
+        const li = document.createElement('li');
+
+        li.appendChild(document.createTextNode(currentTag));
+        li.addEventListener('dblclick', () => {
+            removeTagAtIndex(i)
+            displayTags();
+        });
+        tagsUL.appendChild(li);
+    }
+}
+
+function displayProjects(){
+    projectsUL.innerHTML = '';
+    for (let i=1; i<projects.length; ++i){
+        let currentProject = projects[i];
+        const li = document.createElement('li');
+
+        li.appendChild(document.createTextNode(currentProject));
+        li.addEventListener('dblclick', () => {
+            removeProjectAtIndex(i)
+            displayProjects();
+        });
+        projectsUL.appendChild(li);
+    }
+}
+
+function updateDisplay(){
+    displayTasks();
+    displayTags();
+    displayProjects();
 }
 
 
@@ -215,23 +253,23 @@ function displayTasks(e) {
 
 //removes all the tasks displayed when main.js sends the event
 ipcRenderer.on('itemsClear', function(){
-    tasksList.innerHTML = '';
+    tasksUL.innerHTML = '';
     tasks = [];
 });
 
 // saves the files and notifies main.js that it's complete
-ipcRenderer.on('saveTasks', () => {
+ipcRenderer.on('saveFiles', () => {
     saveFiles();
     ipcRenderer.send('saveComplete');
 });
 
-ipcRenderer.on('loadTasks', () => {
+ipcRenderer.on('loadFiles', () => {
     tasks = store.get('tasks');
     tags = store.get('tags');
     projects = store.get('projects');
-    loadTags();
-    loadProjects();
-    displayTasks();
+    loadDropBoxTags();
+    loadDropBoxProjects();
+    updateDisplay();
 });
 
 function saveFiles(){

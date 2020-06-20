@@ -15,7 +15,7 @@ function createWindow () {
 
   // loads tasks on load
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.webContents.send('loadTasks');
+    mainWindow.webContents.send('loadFiles');
   });
 
   // saves before quitting, waits for everything to be saved
@@ -23,7 +23,7 @@ function createWindow () {
   mainWindow.on('close', (e) => {
     if (!saved) {
       e.preventDefault(); //prevents the app from closing until it's saved
-      mainWindow.webContents.send('saveTasks');
+      mainWindow.webContents.send('saveFiles');
       ipcMain.on('saveComplete', () => {
         saved = true;
         app.quit();
@@ -73,14 +73,14 @@ const mainMenuTemplate = [
         label: 'Save',
         click() {
           //sends the event to the mainRender.js
-          mainWindow.webContents.send('saveTasks');
+          mainWindow.webContents.send('saveFiles');
         }
       },
       {
         label: 'Load From Save File',
         click() {
           //sends the event to the mainRender.js
-          mainWindow.webContents.send('loadTasks');
+          mainWindow.webContents.send('loadFiles');
         }
       }
     ]
