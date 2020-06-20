@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
 let mainWindow;
+// global.mainWindow = mainWindow;
 
 function createWindow () {
   // Create the browser window.
@@ -12,16 +13,22 @@ function createWindow () {
     }
   })
 
-  // mainWindow.on('loaded', () => {
-  //   mainWindow.webContents.send('loadTasks');
-  // });
+  // loads tasks on load
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.webContents.send('loadTasks');
   });
 
-  // saves before quitting
-  mainWindow.on('close', () => {
-    mainWindow.webContents.send('saveTasks');
+  // saves before quitting, waits for everything to be saved
+  let saved = false;
+  mainWindow.on('close', (e) => {
+    if (!saved) {
+      e.preventDefault(); //prevents the app from closing until it's saved
+      mainWindow.webContents.send('saveTasks');
+      ipcMain.on('saveComplete', () => {
+        saved = true;
+        app.quit();
+      });
+    }
   });
 
   // Quit app when main window closed
