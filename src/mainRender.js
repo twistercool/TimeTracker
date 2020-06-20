@@ -1,9 +1,9 @@
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, BrowserWindow, remote } = require("electron");
 
 const Store = require('electron-store');
 const store = new Store();
 
-const ul = document.getElementById('myList');
+const tasksList = document.getElementById('myTasks');
 
 let tasks = []; //stores the tasks of the window
 let tags = ['', 'work', 'leisure', 'swag', 'dab']; 
@@ -47,8 +47,6 @@ class Task{
         this.endTime = endTime;
     }
 }
-
-
 
 function addTag(newTag){
     if (newTag !== '') tags.push(newTag);
@@ -109,7 +107,7 @@ timeBlockForm.addEventListener('load', setFormDefaults());
 timeBlockForm.addEventListener('submit', function(){
     event.preventDefault(); //necessary, it prevents the window from removing the contents
     addTask();
-    updateDisplay();
+    displayTasks();
     setFormDefaults();
 });
 
@@ -122,11 +120,14 @@ function getCurrentDate(){
 function setFormDefaults(){
     document.getElementById('startTime').value = getCurrentDate();
 }
+function FormatDateForDisplay (date) {
+    return date.substr(date.length - 5);
+}
 
 
 // this function adds the form contents to the task array that stores the data
 function addTask(){
-    ul.appendChild(document.createElement('hr'));
+    tasksList.appendChild(document.createElement('hr'));
     const tag = document.querySelector('#tag').value;
     const project = document.querySelector('#project').value;
     const descriptionText = document.querySelector('#description').value;
@@ -143,7 +144,7 @@ function addTask(){
 
 function removeAtIndex(index){
     tasks.splice(index, 1);
-    updateDisplay();
+    displayTasks();
 }
 
 //adds the current date and time as an endTime to a task stored in tasks
@@ -153,12 +154,12 @@ function addEndDate(index){
     console.log(now.toISOString().slice(0, 16));
     console.log(tasks);
     tasks[index]['endTime'] = now.toISOString().slice(0, 16);
-    updateDisplay();
+    displayTasks();
 }
 
 // this function shows all the tasks that are in the task array
-function updateDisplay(e) {
-    ul.innerHTML = '';
+function displayTasks(e) {
+    tasksList.innerHTML = '';
     for (let i = 0; i < tasks.length; ++i)
     {
         let currentTask = tasks[i];
@@ -203,37 +204,37 @@ function updateDisplay(e) {
         deleteButton.setAttribute('onClick', `removeAtIndex(${i})`);
         li.appendChild(deleteButton);
 
-        ul.appendChild(li);
-        ul.appendChild(document.createElement('hr')); //adds a horizontal line
+        tasksList.appendChild(li);
+        tasksList.appendChild(document.createElement('hr')); //adds a horizontal line
     }
 }
 
-function FormatDateForDisplay (date) {
-    return date.substr(date.length - 5);
-}
+
 
 //! BELOW ARE EVENT HANDLERS FOR EVENTS SENT FROM main.js
 
 //removes all the tasks displayed when main.js sends the event
 ipcRenderer.on('itemsClear', function(){
-    ul.innerHTML = '';
+    tasksList.innerHTML = '';
     tasks = [];
 });
 
+// saves the files and notifies main.js that it's complete
 ipcRenderer.on('saveTasks', () => {
-    saveTasks();
+    saveFiles();
+    ipcRenderer.send('saveComplete');
 });
 
 ipcRenderer.on('loadTasks', () => {
-    tasks = store.get('tasks');;
-    tags = store.get('tags');;
+    tasks = store.get('tasks');
+    tags = store.get('tags');
     projects = store.get('projects');
     loadTags();
     loadProjects();
-    updateDisplay();
+    displayTasks();
 });
 
-function saveTasks(){
+function saveFiles(){
     store.set('tasks', tasks);
     store.set('tags', tags);
     store.set('projects', projects);
