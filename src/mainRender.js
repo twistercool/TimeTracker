@@ -95,7 +95,7 @@ addProjectForm.addEventListener('submit', function(){
 
 //when the form is submitted, its contents are added to the array and displayed
 const timeBlockForm = document.forms['myForm'];
-timeBlockForm.addEventListener('load', setFormDefaults());
+timeBlockForm.addEventListener('did-finish-load', setFormDefaults());
 timeBlockForm.addEventListener('submit', function(){
     event.preventDefault(); //necessary, it prevents the window from removing the contents
     addTask();
@@ -111,6 +111,7 @@ function getCurrentDate(){
 }
 function setFormDefaults(){
     document.getElementById('startTime').value = getCurrentDate();
+    return null; // returning null disables a warning, but it's useless
 }
 function FormatDateForDisplay (date) {
     return date.substr(date.length - 5);
