@@ -1,7 +1,6 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
 let mainWindow;
-// global.mainWindow = mainWindow;
 
 function createWindow () {
   // Create the browser window.

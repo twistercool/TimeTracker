@@ -265,9 +265,10 @@ ipcRenderer.on('saveFiles', () => {
 });
 
 ipcRenderer.on('loadFiles', () => {
-    tasks = store.get('tasks');
-    tags = store.get('tags');
-    projects = store.get('projects');
+    // loads the tasks or gets the array if the file s not found
+    tasks = store.get('tasks', tasks);
+    tags = store.get('tags', tags);
+    projects = store.get('projects', projects);
     loadDropBoxTags();
     loadDropBoxProjects();
     updateDisplay();
